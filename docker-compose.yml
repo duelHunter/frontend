@@ -4,7 +4,7 @@ services:
     image: duelhunter/sps-backend:latest
     container_name: backend
     ports:
-      - "5000:8080"
+      - "5000:5000"
   
   frontend:
     image: duelhunter/sps-frontend:latest
