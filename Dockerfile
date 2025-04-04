@@ -1,30 +1,21 @@
-# Use the official Node.js 22 image as the base image
-FROM node:22-alpine AS builder
+# Use an official Node.js image
+FROM node:18-alpine 
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (or yarn.lock)
-COPY package*.json ./
-
-# Install dependencies
+# Copy package.json and install dependencies
+COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the rest of the project files
 COPY . .
 
-# Build the Next.js application
+# Build the Next.js app
 RUN npm run build
 
-# Stage 2: Serve Next.js with Nginx
-FROM node:22-alpine  
+# Expose the port Next.js runs on
+EXPOSE 3000
 
-WORKDIR /app
-COPY --from=builder /app/next.config.ts ./next.config.ts
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-
-
-CMD ["npm", "start"]
+# Start the application
+CMD ["npm", "run", "start"]
